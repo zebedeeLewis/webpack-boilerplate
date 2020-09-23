@@ -1,31 +1,65 @@
 const paths = require('./paths')
+const path = require('path')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
-const multiple_entry_html_webpack_plugin =
-  ( html_entry_descriptors ) => html_entry_descriptors.map(
-    ( { title, favicon, template, filename, chunks } ) =>
+
+
+const html_webpack_plugins_from_source_descriptors =
+  ( source_descriptors ) => source_descriptors.map(
+    ( { html_page_title
+      , html_template
+      , html_output_filename
+      , chunks
+      }
+    ) =>
       new HtmlWebpackPlugin(
-        { title:    title
-        , favicon:  favicon
-        , template: template
-        , filename: filname
-        , chunks:   chunks
+        { title    : html_page_title
+        , favicon  : paths.src + '/images/favicon.png'
+        , template : html_template
+        , filename : html_output_filename
+        , chunks   : chunks
         }
       )
   )
 
 
-module.exports = 
-  { entry:
-    { index     : paths.src + 'js/index.js'
-    , index_css : paths.src + 'scss/index.scss'
+
+const entries_from_source_descriptors =
+  (source_descriptors) =>
+    source_descriptors.reduce
+      ( ( entries
+        , { entry_name
+          , entry_filename
+          }
+        ) => (
+          { [entry_name] : entry_filename
+          , ... entries
+          }
+        )
+      , {}
+      )
+
+
+
+const source_descriptors =
+  [ { entry_name           : 'index'
+    , entry_filename       : path.join(paths.src, 'index.js')
+    , html_page_title      : 'Title 1'
+    , html_template        : path.join(paths.src, 'html', 'index.html')
+    , html_output_filename : 'index.html'
+    , chunks               : [ 'index' ]
     }
-  
-  , output:
+  ]
+
+
+
+module.exports =
+  { entry  : entries_from_source_descriptors(source_descriptors)
+  , output :
     { path       : paths.build
-    , filename   : '[name].[ext]'
+    , filename   : path.join('js', '[name].js')
     , publicPath : '/'
     }
   
@@ -34,65 +68,35 @@ module.exports =
     [ new CleanWebpackPlugin()
   
     , new CopyWebpackPlugin(
-        [ { from   : paths.static
-          , to     : 'assets'
-          , ignore : ['*.DS_Store']
-          }
-        ]
+        { patterns: [ { from: 'assets', to: 'assets' } ] }
       )
   
-    , ...  multiple_entry_html_webpack_plugin(
-        [ { title    : 'Temp Page Title'
-          , favicon  : paths.src + '/images/favicon.png'
-          , template : path.src + 'html/index.html'
-          , filename : 'index.html'
-          , chunks   : [ index ]
-          }
-        ]
+    , ...  html_webpack_plugins_from_source_descriptors(
+        source_descriptors
       )
     ]
   
   , module: 
     { rules: 
-      [ { test: /\.js$/
-        , exclude: /node_modules/
-        , use: ['babel-loader', 'eslint-loader']
-        }
-  
-      , { test: /\.(scss|css)$/
-        , use:
-          [ 'style-loader'
-          , { loader: 'css-loader'
-            , options: 
-              { sourceMap: true
-              , importLoaders: 1
-              }
+      [ { test      : /\.js$/
+        , exclude   : /node_modules/
+        , use       :
+          [ { loader  : 'babel-loader'
+            , options :
+              { configFile: path.join(paths.config, '.babelrc') }
             }
-          , { loader: 'postcss-loader'
-            , options: { sourceMap: true }
-            }
-          , { loader: 'sass-loader'
-            , options: { sourceMap: true }
+          , { loader  : 'eslint-loader'
+            , options :
+              { configFile: path.join(paths.config, '.eslintrc') }
             }
           ]
-        },
-  
-        /* Copy image files to build folder. */
-      , { test: /\.(?:ico|gif|png|jpg|jpeg|webp|svg)$/i
-        , loader: 'file-loader'
-        , options:
-          { name: '[path][name].[ext]'
-          , context: 'src' // prevent display of src/ in filename
-          }
         }
   
-        /* Inline font files. */
-      , { test: /\.(woff(2)?|eot|ttf|otf|)$/
-        , loader: 'url-loader'
-        , options:
-          { limit: 8192
-          , name: '[path][name].[ext]'
-          , context: 'src' // prevent display of src/ in filename
+      , { test      : /\.(?:ico|gif|png|jpg|jpeg|webp|svg)$/i
+        , loader    : 'file-loader'
+        , options   :
+          { name    : '[path][name].[ext]'
+          , context : 'src'
           }
         }
       ]
