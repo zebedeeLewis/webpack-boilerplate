@@ -4,9 +4,20 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 
 
+const mode = process.env.NODE_ENV
+
+
+
+const entry =
+  { index: path.join(ProjectStructure.SRC_DIR, 'index.js')
+  }
+
+
+
 const output =
   { filename: '[name].bundle.js'
   , path: ProjectStructure.BUILD_DIR
+  , publicPath: process.env.NODE_ENV === 'development' ? '/' : '/'
   , environment:
       { arrowFunction : false
       , bigIntLiteral : false
@@ -71,7 +82,8 @@ const resolve =
 
 
 module.exports =
-  { entry: path.join(ProjectStructure.SRC_DIR, 'index.js')
+  { mode
+  , entry
   , output
   , module : webpackModule
   , plugins
