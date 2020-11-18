@@ -1,10 +1,11 @@
 const path = require('path')
 const ProjectStructure = require('./ProjectStructure')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 
 
 const output =
-  { filename: '[name].js'
+  { filename: '[name].bundle.js'
   , path: ProjectStructure.BUILD_DIR
   , environment:
       { arrowFunction : false
@@ -21,7 +22,7 @@ const output =
 
 const webpackModule =
   { rules:
-      [ { test: /\.m?js$/
+      [ { test: /\.m?js$/i
         , exclude: /(node_modules|bower_components)/
         , use:
             { loader: 'babel-loader'
@@ -34,13 +35,27 @@ const webpackModule =
                 }
             }
         }
+
+
+      , { test: /\.css$/i
+        , use:
+            [ 'style-loader'
+            , 'css-loader'
+            ]
+        }
       ]
   }
 
 
 
+const plugins =
+  [ new CleanWebpackPlugin()
+  ]
+
+
+
 const resolve =
-  { extensions : ['.js']
+  { extensions : ['.js', '.css']
   }
 
 
@@ -49,5 +64,6 @@ module.exports =
   { entry: path.join(ProjectStructure.SRC_DIR, 'index.js')
   , output
   , module : webpackModule
+  , plugins
   , resolve
   }
