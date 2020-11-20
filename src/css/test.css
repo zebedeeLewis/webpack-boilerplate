@@ -1,4 +1,4 @@
 .test {
   color                    : red;
-  background-image         : url('../favicon.png')
+  display                  : flex;
 }

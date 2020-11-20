@@ -6,9 +6,33 @@ const webpack = require('webpack')
 
 
 
+const webpackModule =
+  { rules:
+      [ { test: /\.css$/i
+        , use:
+            [ 'style-loader'
+            , { loader  : 'css-loader'
+              , options : { sourceMap: true }
+              }
+
+            , { loader  : 'postcss-loader'
+              , options : 
+                  { sourceMap      : true
+                  , postcssOptions :
+                    { config: ProjectStructure.POST_CSS_CONFIG_PATH
+                    }
+                  }
+              }
+            ]
+        }
+      ]
+  }
+
+
+
 const devServer =
   { contentBase : ProjectStructure.BUILD_DIR
-  , publicPath  : '/testPublicPath'
+  , publicPath  : ProjectStructure.DEV_PUBLIC_PATH
   , open        : true
   , compress    : true
   , hot         : true
@@ -23,6 +47,7 @@ const plugins = [ new webpack.HotModuleReplacementPlugin() ]
 
 const devConfig =
   { devtool: 'inline-source-map'
+  , module: webpackModule
   , devServer
   , plugins
   }

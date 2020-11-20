@@ -1,6 +1,7 @@
 const path = require('path')
 const ProjectStructure = require('./ProjectStructure')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const ConfigSupport = require('./webpack.support.js')
 
 
 
@@ -9,15 +10,20 @@ const mode = process.env.NODE_ENV
 
 
 const entry =
-  { index: path.join(ProjectStructure.SRC_DIR, 'index.js')
-  }
+  ConfigSupport.entries_from_page_descriptors
+    ( ProjectStructure.pageDescriptors
+    )
 
 
 
 const output =
-  { filename: '[name].bundle.js'
-  , path: ProjectStructure.BUILD_DIR
-  , publicPath: process.env.NODE_ENV === 'development' ? '/' : '/'
+  { filename   : path.join('js', '[name].js')
+  , path       : ProjectStructure.DIST_DIR
+  , publicPath :
+      ( process.env.NODE_ENV === 'development' 
+        ? ProjectStructure.DEV_PUBLIC_PATH
+        : ProjectStructure.PROD_PUBLIC_PATH
+      )
   , environment:
       { arrowFunction : false
       , bigIntLiteral : false
@@ -33,11 +39,26 @@ const output =
 
 const webpackModule =
   { rules:
-      [ { test: /\.m?js$/i
-        , exclude: /(node_modules|bower_components)/
-        , use:
-            { loader: 'babel-loader'
-            , options:
+      [ { test : /\.(handlebars|html)$/i
+        , use  :
+            [ { loader  : 'handlebars-loader'
+              , options :
+                  { extensions   : ['.html', '.handlebars']
+                  , rootRelative : ProjectStructure.SRC_DIR
+                  , partialDirs  : [ProjectStructure.SRC_DIR]
+                  , helperDirs   : [ProjectStructure.HANDLEBARS_DIR]
+                  , knownHelpers : ['shell']
+                  }
+              }
+            ]
+        }
+
+
+      , { test      : /\.m?js$/i
+        , exclude   : /(node_modules|bower_components)/
+        , use       :
+            { loader  : 'babel-loader'
+            , options :
                 { exclude: 
                     // \\ for Windows, \/ for Mac OS and Linux
                     [ /node_modules[\\\/]core-js/
@@ -48,21 +69,19 @@ const webpackModule =
         }
 
 
-      , { test: /\.css$/i
-        , use:
-            [ 'style-loader'
-            , 'css-loader'
-            ]
-        }
-
-
       , { test: /\.(png|svg|jpg|jpeg|gif)$/i
         , type: 'asset/resource'
+        , generator :
+            { filename: path.join('images', '[name][ext]')
+            }
         }
 
 
       , { test: /\.(woff|woff2|eot|ttf|otf)$/i
         , type: 'asset/resource'
+        , generator :
+            { filename: path.join('fonts', '[name][ext]')
+            }
         }
       ]
   }
@@ -71,6 +90,9 @@ const webpackModule =
 
 const plugins =
   [ new CleanWebpackPlugin()
+  , ... ConfigSupport.html_webpack_plugins
+          ( ProjectStructure.pageDescriptors
+          )
   ]
 
 
