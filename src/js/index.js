@@ -1,5 +1,5 @@
 import * as TestModule from './TestModule'
-import '../css/test.css'
+import '../scss/test.scss'
 import '../images/favicon.png'
 import '../index.html'
 

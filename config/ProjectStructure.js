@@ -19,7 +19,7 @@ const POST_CSS_CONFIG_PATH =
 
 const SRC_DIR = path.join(PROJECT_ROOT_DIR, 'src/')
 
-const SRC_CSS_DIR = path.join(SRC_DIR, 'css/')
+const SRC_SCSS_DIR = path.join(SRC_DIR, 'scss/')
 
 const SRC_JS_DIR = path.join(SRC_DIR, 'js/')
 
@@ -27,7 +27,7 @@ const SRC_IMAGE_DIR = path.join(SRC_DIR, 'images/')
 
 const PATH_TO_COMMON_JS_SRC = path.join(SRC_JS_DIR, 'common.js')
 
-const PATH_TO_COMMON_CSS_SRC = path.join(SRC_CSS_DIR, 'common.css')
+const PATH_TO_COMMON_SCSS_SRC = path.join(SRC_SCSS_DIR, 'common.scss')
 
 const PATH_TO_FAVICON_SRC = 'favicon.png'
 
@@ -35,13 +35,13 @@ const PATH_TO_INDEX_HTML_SRC = path.join(SRC_DIR, 'index.html')
 
 const PATH_TO_INDEX_JS_SRC = path.join(SRC_JS_DIR, 'index.js')
 
-const PATH_TO_INDEX_CSS_SRC = path.join(SRC_DIR, 'index.css')
+const PATH_TO_INDEX_SCSS_SRC = path.join(SRC_DIR, 'index.scss')
 
 
 
 const DIST_DIR = path.join(PROJECT_ROOT_DIR, 'dist/')
 
-const DIST_CSS_DIR = path.join(DIST_DIR, 'css/')
+const DIST_SCSS_DIR = path.join(DIST_DIR, 'scss/')
 
 const DIST_JS_DIR = path.join(DIST_DIR, 'js/')
 
@@ -69,8 +69,8 @@ const pageDescriptors =
         { common_js :
             { sourceFile : PATH_TO_COMMON_JS_SRC
             }
-        , common_css :
-            { sourceFile : PATH_TO_COMMON_CSS_SRC
+        , common_scss :
+            { sourceFile : PATH_TO_COMMON_SCSS_SRC
             }
         }
       }
@@ -82,7 +82,7 @@ const pageDescriptors =
 module.exports =
   { PROJECT_ROOT_DIR
   , DIST_DIR
-  , DIST_CSS_DIR
+  , DIST_SCSS_DIR
   , DIST_JS_DIR
   , DIST_IMAGE_DIR
   , SRC_DIR

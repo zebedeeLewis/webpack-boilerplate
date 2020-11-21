@@ -8,7 +8,7 @@ const path = require('path')
 
 const webpackModule =
   { rules:
-      [ { test: /\.css$/i
+      [ { test: /\.s?css$/i
         , use:
             [ MiniCssExtractPlugin.loader
             , 'css-loader'
@@ -19,6 +19,7 @@ const webpackModule =
                     }
                   }
               }
+            , 'sass-loader'
             ]
         }
       ]
