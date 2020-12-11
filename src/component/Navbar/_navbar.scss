@@ -1,0 +1,195 @@
+@use "lib/scss/spacing";
+@use "lib/scss/breakpoint";
+
+
+
+$nav-item-vertical-spacing : spacing.$b3;
+$panel-margins--xs         : spacing.$b8;
+$panel-margins--sm         : spacing.$b16;
+
+
+
+@mixin navbar {
+  position                 : absolute;
+  width                    : 100%;
+  z-index                  : 2;
+}
+
+
+
+@mixin navbar-inner {
+  padding                  : spacing.$b12
+                             $panel-margins--xs
+                             spacing.$b8
+                             $panel-margins--xs;
+
+  @media (min-width: breakpoint.$sm) {
+    padding                : spacing.$b12
+                             $panel-margins--sm
+                             spacing.$b8
+                             $panel-margins--sm
+  }
+
+  @media (min-width: breakpoint.$desktop-view) {
+    padding                : spacing.$b15
+                             spacing.$b13
+                             spacing.$b8
+                             spacing.$b13;
+  }
+}
+
+
+
+.navbar, .navbar--toggled {
+  @include                 navbar
+}
+
+
+.navbar__closed {
+  @include                 navbar-inner;
+
+  display                  : flex;
+}
+
+
+.navbar__open {
+  @include                 navbar-inner;
+
+  background-color         : white;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    background             : transparent;
+  }
+}
+
+
+.navbar .navbar__closed {
+  display                  : flex;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    display                : none;
+  }
+}
+
+
+
+.navbar .navbar__open {
+  display                  : none;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    display                : flex;
+  }
+}
+
+
+
+.navbar--toggled .navbar__closed {
+  display                  : none;
+}
+
+
+
+.navbar--toggled .navbar__open {
+  display                  : block;
+}
+
+
+
+.navbar-close {
+  @media (min-width: breakpoint.$desktop-view) {
+    display                : none;
+  }
+}
+
+
+
+@mixin nav-item {
+  padding-bottom           : $nav-item-vertical-spacing;
+  padding-top              : 0;
+  text-transform           : lowercase;
+  display                  : inline-block;
+  margin-left              : spacing.$b6;
+  color                    : black;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    color                  : white;
+  }
+}
+
+
+
+@mixin nav-item--active {
+}
+
+
+
+.nav-item {
+  @include                 nav-item;
+}
+
+
+
+.nav-item--first {
+  @include                 nav-item;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    margin-left            : spacing.$b14;
+  }
+}
+
+
+
+.nav-item--logo {
+  display                  : none;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    display                : inline-block;
+    font-size              : 14px;
+  }
+}
+
+
+
+.navbar-logo {
+  @include                 nav-item;
+
+  margin-left              : auto;
+  margin-right             : auto;
+}
+
+
+
+.nav-item--active {
+  @include                 nav-item;
+  @include                 nav-item--active;
+}
+
+
+
+@mixin scrim {
+  background-color         : hsla(0, 0, 0, 0.4);
+  position                 : fixed;
+  z-index                  : 1;
+  width                    : 100vw;
+  height                   : 100vh;
+}
+
+
+
+.scrim {
+  @include                 scrim;
+
+  display                  : none;
+}
+
+
+
+.scrim--active {
+  @include                 scrim;
+
+  display                  : block;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    display                : none;
+  }
+}

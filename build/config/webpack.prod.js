@@ -1,0 +1,52 @@
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const path = require('path')
+const { merge } = require('webpack-merge')
+
+const buildConfig = require('./build.config.js')
+const webpackCore = require('./webpack.core.js')
+
+
+
+const webpackModule =
+  { rules:
+      [ { test: /\.s?css$/i
+        , use:
+            [ MiniCssExtractPlugin.loader
+            , 'css-loader'
+            , { loader  : 'postcss-loader'
+              , options : 
+                  { postcssOptions :
+                    { config: buildConfig.Build.PostCssConfigPath
+                    }
+                  }
+              }
+            , 'resolve-url-loader'
+            , { loader  : 'sass-loader'
+              , options :
+                  { sourceMap : true
+                  }
+              }
+            ]
+        }
+      ]
+  }
+
+
+
+const plugins =
+  [ new MiniCssExtractPlugin
+      ( { filename : path.join('css', '[name].css')
+        }
+      )
+  ]
+
+
+
+const prodConfig =
+  { module: webpackModule
+  , plugins
+  }
+
+
+
+module.exports = merge(webpackCore, prodConfig)

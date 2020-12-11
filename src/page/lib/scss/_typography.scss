@@ -1,0 +1,146 @@
+@use "../../../lib/scss/spacing" as spacing;
+@use "../../../lib/scss/color";
+
+
+
+$font-family         : 'Spartan', sans-serif;
+$font-size           : 12px;
+$font-weight-normal  : 500;
+$font-weight-medium  : 600;
+$font-weight-bold    : 700;
+$font-color          : color.$dark-grey;
+$line-height         : spacing.$b5;
+$h1-font-size        : 32px;
+$h1-line-height      : spacing.$b8;
+
+
+
+:root {
+  font-family              : $font-family;
+  line-height              : $line-height;
+  font-size                : $font-size;
+  letter-spacing           : 1px;
+  color                    : $font-color;
+}
+
+
+
+.text-center {
+  text-align               : center;
+}
+
+
+@mixin h {
+  font-weight              : $font-weight-bold;
+  margin-top               : 0;
+  color                    : black;
+  display                  : inline-block;
+}
+
+
+@mixin h1 {
+  @include                 h;
+
+  font-size                : $font-size + spacing.$b5;
+  line-height              : spacing.$b10;
+  margin-bottom            : spacing.$b9; 
+}
+
+
+
+@mixin h2 {
+  @include                 h;
+
+  font-size                : $font-size + spacing.$b3;
+  line-height              : spacing.$b7;
+  margin-bottom            : spacing.$b7; 
+}
+
+
+
+@mixin h3 {
+  @include                 h;
+
+  font-size                : $font-size + spacing.$b1;
+  line-height              : spacing.$b5;
+  margin-bottom            : spacing.$b5; 
+}
+
+
+
+@mixin h4 {
+  @include                 h;
+
+  font-size                : $font-size;
+  line-height              : spacing.$b5;
+  margin-bottom            : spacing.$b5; 
+}
+
+
+
+h1 {
+  @include                 h1;
+}
+
+
+
+h2 {
+  @include                 h2;
+}
+
+
+
+h3 {
+  @include                 h3;
+}
+
+
+
+h4 {
+  @include                 h4;
+}
+
+
+
+.h1 {
+  @include                 h1;
+}
+
+
+
+.h2 {
+  @include                 h2;
+}
+
+
+
+.h3 {
+  @include                 h3;
+}
+
+
+
+.h4 {
+  @include                 h4;
+}
+
+
+
+p {
+  margin-top               : 0;
+  margin-bottom            : spacing.$b5;
+}
+
+
+
+a {
+  text-decoration          : none;
+  color                    : $font-color;
+}
+
+
+
+.bold {
+  font-weight              : $font-weight-bold!important;
+}
+

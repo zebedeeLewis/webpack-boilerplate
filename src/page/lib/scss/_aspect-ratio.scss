@@ -1,0 +1,62 @@
+@use "../../../lib/scss/spacing";
+@use "../../../lib/scss/breakpoint";
+
+
+$R1TO1  : 100%;
+$R16TO9 : 50.66%;
+$R4TO3  : 75%;
+$R3TO2  : 66.66%;
+$R21TO9 : 42.85%;
+
+
+
+@mixin custom
+  ( $ratio : $R16TO9
+  ) {
+    position               : relative;
+
+    &:before {
+      width                : 100%;
+      padding-bottom       : $ratio;
+      display              : block;
+      content              : "";
+    }
+  }
+
+
+
+@mixin square
+  {
+    @include               custom($R1TO1);
+  }
+
+
+
+@mixin r16to9 
+  {
+    @include               custom();
+  }
+
+
+
+@mixin r4to3
+  {
+    @include               custom($R4TO3);
+  }
+
+
+
+@mixin r3to2
+  {
+    @include               custom($R3TO2);
+  }
+
+
+
+@mixin r21to9
+  {
+    @include               custom($R21TO9);
+  }
+
+
+
