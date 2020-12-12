@@ -26,7 +26,7 @@ function register_as_handlebars_partial
     const basename =
       path.basename
         ( path.relative(templatesDir.dir, absolutePath)
-        , '.handlebars.html'
+        , '.template.html'
         )
 
 

@@ -45,7 +45,7 @@ const output
 
 const webpackModule
   = { rules:
-        [ { test : /\.handlebars\.html$/i
+        [ { test : /\.template\.html$/i
           , use  :
               [ { loader: 'html-loader'
                 , options: { preprocessor: webpackSupport.preprocessor }
