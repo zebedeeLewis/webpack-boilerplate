@@ -1,0 +1,373 @@
+@use "node_modules/@splidejs/splide/dist/css/splide.min.css";
+@use "node_modules/normalize.css/normalize.css";
+@use "sass:color" as sassColor;
+
+@use "lib/scss/aspect-ratio";
+@use "lib/scss/typography";
+@use "lib/scss/icons";
+
+@use "lib/scss/color";
+@use "lib/scss/spacing";
+@use "lib/scss/breakpoint";
+
+@use "component/Navbar";
+
+
+
+/* Contents
+ * 1. Variables
+ * 2. Mixins
+ * 3. General
+ * 4. Image Slider
+ * 5. Slider Control
+ * 6. Text Slider
+ * 7. About Section
+ * 8. Misc
+ */
+
+
+
+/*
+ * 1. Variables
+ */
+$panel-margins--xs       : spacing.$b8;
+$panel-margins--sm       : spacing.$b16;
+$panel-margins--md       : spacing.$b8;
+$panel-margins--lg       : spacing.$b25;
+
+
+
+/*
+ * 2. Mixins
+ */
+
+
+
+/*
+ * 3. General
+ */
+div {
+  box-sizing             : border-box;
+}
+
+
+
+.no-scroll {
+  overflow                 : hidden;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    overflow               : auto;
+  }
+}
+
+
+
+.main {
+  @media (min-width: breakpoint.$desktop-view) {
+    display                : grid;
+    grid-template-columns  : repeat(24, 1fr);
+    grid-template-areas    :
+      "a a a a a a a a a a a a a a b b b b b b b b b b"
+      "c c c c c c c d d d d d d d d d d e e e e e e e"
+  }
+}
+
+
+
+.display-none {
+  display                   : none;
+}
+
+
+
+.splide {
+  width                    : 100%;
+}
+
+
+
+.splide__list {
+  width                    : 100%;
+}
+
+
+
+/*
+ * 4. Image Slider
+ */
+
+.image-slider {
+  position                 : relative;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    grid-area              : a;
+  }
+}
+
+
+
+@mixin image-slide {
+  width                    : 100%;
+  background-size          : cover;
+  background-repeat        : no-repeat;
+
+  @include                 aspect-ratio.square;
+
+  @media (min-width: breakpoint.$sm) {
+    @include               aspect-ratio.r21to9;
+  }
+
+  @media (min-width: breakpoint.$desktop-view) {
+    @include               aspect-ratio.custom(63.4%);
+  }
+}
+
+
+
+.image-slide--1 {
+  @include                 image-slide;
+
+  background-image         : url(./image/mobile/hero_1.jpg);
+
+  @media (min-width: breakpoint.$sm) {
+    background-image       : url(./image/desktop/hero_1.jpg);
+  }
+}
+
+
+
+.image-slide--2 {
+  @include                 image-slide;
+
+  background-image         : url(./image/mobile/hero_2.jpg);
+
+  @media (min-width: breakpoint.$sm) {
+    background-image       : url(./image/desktop/hero_2.jpg);
+  }
+}
+
+
+
+.image-slide--3 {
+  @include                 image-slide;
+
+  background-image         : url(./image/mobile/hero_3.jpg);
+
+  @media (min-width: breakpoint.$sm) {
+    background-image       : url(./image/desktop/hero_3.jpg);
+  }
+}
+
+
+
+.text-slider {
+  @media (min-width: breakpoint.$desktop-view) {
+    grid-area              : b;
+    display                : flex;
+    align-items            : flex-start;
+    justify-content        : center;
+  }
+
+  @media (min-width: breakpoint.$lg) {
+    align-items            : center;
+  }
+}
+
+
+
+/*
+ * 5. Slider Control
+ */
+
+.slider-control {
+  display                  : flex;
+  justify-content          : flex-end;
+  background-color         : black;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    grid-column            : 15 / span 3;
+    grid-row               : 1 / 2;
+    align-self             : end;
+    z-index                : 2;
+  }
+}
+
+
+
+@mixin button {
+  display                 : inline-block;
+  background-color        : black;
+  color                   : color.$dark-grey;
+  border                  : none;
+  outline                 : none;
+  font-size               : 24px;
+  line-height             : unset;
+  padding                 : spacing.$b5;
+
+  &:hover {
+    background            : sassColor.scale(
+                              color.$dark-grey,
+                              $lightness: -10%
+                            );
+    color                  : white;
+  }
+
+  @media (min-width: breakpoint.$desktop-view) {
+    padding                : spacing.$b6 spacing.$b5;
+    width                  : 50%;
+  }
+}
+
+
+
+.slider-control__left {
+  @include                 button;
+}
+
+
+
+.slider-control__right {
+  @include                 button;
+}
+
+
+
+/*
+ * 6. Text Slider
+ */
+
+@mixin panel {
+  padding                  : 0 $panel-margins--xs;
+  margin-bottom            : spacing.$b12;
+  margin-top               : spacing.$b12;
+  width                    : 100%;
+
+  @media (min-width: breakpoint.$sm) {
+    padding                : 0 $panel-margins--sm;
+  }
+
+  @media (min-width: breakpoint.$desktop-view) {
+    padding                : 0 $panel-margins--md;
+    margin-top             : spacing.$b8;
+    margin-bottom          : 0;
+  }
+
+  @media (min-width: breakpoint.$lg) {
+    margin-top             : 0;
+  }
+}
+
+
+
+.panel {
+  @include                 panel;
+
+
+  @media (min-width: breakpoint.$lg) {
+    padding                : 0 $panel-margins--lg;
+  }
+}
+
+
+
+.panel__tagline {
+  @include                 typography.h2;
+
+  @media (min-width: breakpoint.$lg) {
+    @include               typography.h1;
+  }
+}
+
+
+
+.panel__content {
+  margin-bottom            : spacing.$b12;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    margin-bottom          : 0;
+  }
+}
+
+
+
+/*
+ * 7. About Section
+ */
+
+.about-section {
+  @include                 panel;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    grid-area              : d;
+    align-self             : center;
+  }
+
+  @media (min-width: breakpoint.$lg) {
+    padding                : 0 48px;
+  }
+}
+
+
+
+.panel__tagline--about {
+  @include                 typography.h2;
+
+  @media (min-width: breakpoint.$desktop-view) {
+    @include               typography.h3;
+  }
+}
+
+
+
+/** TODO:
+ *    - instead of representing the "image-panel" components using
+ *      tags, we can use ":before" and ":after" pseudo elements.
+ *      this will make our html a lot lighter and easier on the eyes.
+ */
+@mixin image-panel {
+  @include                 aspect-ratio.square;
+
+  margin-bottom            : spacing.$b12;
+  background-size          : cover;
+
+  @media (min-width: breakpoint.$sm) {
+    @include               aspect-ratio.r16to9;
+  }
+
+  @media (min-width: breakpoint.$desktop-view) {
+    @include               aspect-ratio.square;
+    align-self             : start;
+    margin-bottom          : 0;
+  }
+
+  @media (min-width: breakpoint.$lg) {
+    @include               aspect-ratio.custom(63.4%);
+  }
+}
+
+
+
+.image-panel--1 {
+  @include                 image-panel;
+
+  background-image         : url(./image/about_dark.jpg);
+
+  @media (min-width: breakpoint.$desktop-view) {
+    grid-area              : c;
+  }
+}
+
+
+
+.image-panel--2 {
+  @include                 image-panel;
+
+  background-image         : url(./image/about_light.jpg);
+
+  @media (min-width: breakpoint.$desktop-view) {
+    grid-area              : e;
+  }
+}
+
+
+

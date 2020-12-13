@@ -3,7 +3,13 @@ const path = require('path')
 const { merge } = require('webpack-merge')
 
 const webpackCore = require('./webpack.core.js')
+const ProjectDesc = require('../lib/ProjectDesc')
 const buildConfig = require('./build.config.js')
+
+
+
+const projectDesc = ProjectDesc.create(buildConfig)
+const srcDesc = ProjectDesc.get_src(projectDesc)
 
 
 
@@ -21,7 +27,7 @@ const webpackModule =
               , options : 
                   { sourceMap      : true
                   , postcssOptions :
-                    { config: buildConfig.Build.PostCssConfigPath
+                    { config: ProjectDesc.get_postCssConfig(projectDesc)
                     }
                   }
               }
@@ -40,14 +46,18 @@ const webpackModule =
 
 
 
+const distDir
+  = ProjectDesc.Dist.get_root
+      ( ProjectDesc.get_dist(projectDesc)
+      )
+
+
+const devPublicPath = ProjectDesc.get_devPublicPath(projectDesc)
+
 const devServer =
-  { contentBase : buildConfig.Dist.Root
-  , publicPath  : buildConfig.Build.DevPublicPath
-  , openPage    :
-      path.relative
-        ('/'
-        , path.join(buildConfig.Build.DevPublicPath, 'index.html')
-        )
+  { contentBase : distDir
+  , publicPath  : devPublicPath
+  , openPage    : devPublicPath.replace(/^\//, '') + 'index.html'
   , open        : true
   , hot         : true
   , port        : 8000

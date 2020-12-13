@@ -2,10 +2,13 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const { merge } = require('webpack-merge')
 
-const buildConfig = require('./build.config.js')
 const webpackCore = require('./webpack.core.js')
+const ProjectDesc = require('../lib/ProjectDesc')
+const buildConfig = require('./build.config.js')
 
 
+
+const projectDesc = ProjectDesc.create(buildConfig)
 
 const webpackModule =
   { rules:
@@ -16,7 +19,7 @@ const webpackModule =
             , { loader  : 'postcss-loader'
               , options : 
                   { postcssOptions :
-                    { config: buildConfig.Build.PostCssConfigPath
+                    { config: ProjectDesc.get_postCssConfig(projectDesc)
                     }
                   }
               }

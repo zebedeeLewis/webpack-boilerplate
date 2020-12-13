@@ -1,6 +1,8 @@
 const path = require('path')
+const handlebars = require('handlebars')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const webpackSupport = require('./webpack.support.js')
+const Utils = require('../lib/Utils')
+const ProjectDesc = require('../lib/ProjectDesc')
 const buildConfig = require('./build.config.js')
 
 
@@ -8,27 +10,32 @@ const mode = process.env.NODE_ENV
 
 
 
-const entry
-  = { index : buildConfig.Src.Page.HomeJsPath
-    }
+const projectDesc = ProjectDesc.create(buildConfig)
+const srcDesc = ProjectDesc.get_src(projectDesc)
+const pages = ProjectDesc.Src.get_pages(srcDesc)
 
 
 
-const entriesMetadata
-  = { index :
-        { title : 'Home'
-        }
-    }
+Utils.register_project_templates(handlebars, projectDesc)
 
 
+
+const entry = pages.reduce(Utils.Webpack.entry_points_from_pages, {})
+
+
+
+const distDir
+  = ProjectDesc.Dist.get_root
+      ( ProjectDesc.get_dist(projectDesc)
+      )
 
 const output
   = { filename   : path.join('js', '[name].js')
-    , path       : buildConfig.Dist.Root
+    , path       : distDir
     , publicPath :
         ( process.env.NODE_ENV === 'development' 
-            ? buildConfig.Build.DevPublicPath
-            : buildConfig.Build.ProdPublicPath
+            ? ProjectDesc.get_devPublicPath(projectDesc)
+            : ProjectDesc.get_prodPublicPath(projectDesc)
         )
     , environment:
         { arrowFunction : false
@@ -42,13 +49,25 @@ const output
     }
 
 
+const preprocessor
+  = ( content
+    , loaderContext
+    ) => (
+      Utils.compile_templates.call
+        ( loaderContext
+        , { content
+          , handlebars
+          }
+        )
+    )
+
 
 const webpackModule
   = { rules:
         [ { test : /\.template\.html$/i
           , use  :
-              [ { loader: 'html-loader'
-                , options: { preprocessor: webpackSupport.preprocessor }
+              [ { loader : 'html-loader'
+                , options : { preprocessor }
                 }
               ]
           }
@@ -82,34 +101,34 @@ const webpackModule
               { filename: path.join('fonts', '[name][ext]')
               }
           }
-      ]
-  }
+        ]
+    }
 
 
 
 const plugins
   = [ new CleanWebpackPlugin()
-    , ... Object.entries(entry).map
-            ( ([entryName, entryPath]) => {
-                return (
-                  webpackSupport.html_webpack_plugin_from_entry
-                    ( entriesMetadata[entryName]
-                    , entryName
-                    , entryPath
-                    )
-                )
-              }
-            )
+    , ... Utils.Webpack.generate_htmlWebpackPlugins(projectDesc)
     ]
 
 
 
+const componentsDir
+  = ProjectDesc.Src.get_componentDir(srcDesc)
+
+const srcLibDir
+  =  ProjectDesc.Lib.get_root
+       ( ProjectDesc.Src.get_lib(srcDesc)
+       )
+
+const pagesDir = ProjectDesc.Src.get_root(srcDesc)
+
 const resolve
   = { extensions : ['.js', '.mjs', '.css', 'scss']
     , alias      :
-        { component : buildConfig.Src.Component.Root
-        , lib       : buildConfig.Src.LibDir
-        , pages     : buildConfig.Src.Page.Root
+        { component : componentsDir
+        , lib       : srcLibDir
+        , pages     : pagesDir
         }
     }
 
